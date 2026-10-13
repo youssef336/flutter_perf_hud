@@ -1,3 +1,5 @@
+[العربية](README.ar.md)
+
 <h1 align="center">Flutter Perf HUD</h1>
 
 <p align="center">
@@ -5,6 +7,7 @@
 </p>
 
 <p align="center">
+  <a href="https://pub.dev/packages/flutter_perf_hud"><img src="https://img.shields.io/pub/v/flutter_perf_hud?style=for-the-badge&logo=dart&label=pub.dev" alt="pub.dev"/></a>
   <img src="https://img.shields.io/badge/Flutter-%E2%89%A53.35-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter">
   <img src="https://img.shields.io/badge/Dart-%5E3.9-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart">
   <img src="https://img.shields.io/badge/Dependencies-zero-2ea44f?style=for-the-badge" alt="Zero dependencies">
@@ -24,47 +27,38 @@
 > `MaterialApp` above it, never blocks touches outside itself, redraws at most ~2.5 times a second,
 > and in release builds returns your app untouched with no callbacks registered at all.
 
-<div dir="rtl">
+Wrap your app in `PerfHud` once, and you get a small "pill" on top of it that tells you how the app
+runs on the device while you use it: how many frames per second, whether there is jank, and how much
+memory it is eating. Tap it to open a panel with the details, and copy a Markdown report with one tap.
 
-حط `PerfHud` حوالين الـ app بتاعك مرة واحدة، وهتلاقي فوقه «حبّاية» صغيرة بتقولك الـ app
-شغال إزاي على الجهاز وإنت بتستخدمه: كام frame في الثانية، فيه jank ولا لأ، واكل رامات قد إيه.
-تدوس عليها تفتح لوحة فيها التفاصيل، وتنسخ تقرير Markdown بدوسة.
+## ✨ What it does
 
-## ✨ بيعمل إيه
+- 🎞 **Frames**: the current FPS, the UI thread and raster thread time of every frame, the number of
+  frames with jank measured against the device display's real budget (60, 90 or 120 Hz), p50/p90/p99
+  for the whole session, the 5 worst frames and when they happened, and a small sparkline of the last
+  120 frames.
+- 🧠 **Memory**: the process RSS (now and the peak), and the image cache: how many bytes and how many
+  images it uses out of its limit, and how many images are live on screen.
+- 🖼 **Oversized images**: any image decoded at a size much larger than the size it is shown at, the
+  memory wasted on it, and the suggested `cacheWidth` that fixes the problem.
+- 🔁 **Rebuilds**: wrap any widget in `HudRebuildTracker(label: ...)` and you will see how many times
+  it was built, how many times per second right now, and the peak rate.
+- 📋 **Report**: a Copy button copies a Markdown report (tables ready for an issue or PR), and
+  `exportReport()` gives you the same data as an object with `toJson()` and `toMarkdown()`.
+- 🪶 **Lightweight**: the HUD itself sits inside a `RepaintBoundary`, redraws its screen at most two
+  and a half times a second and only when there is something new, and never calls `setState` on your
+  app's tree.
+- 🚫 **Zero cost in release**: when `enabled` is `false` (the default in release), `PerfHud` returns
+  the child as is: no callbacks, no timers, no hooks.
 
-- 🎞 **الـ Frames**: الـ FPS الحالي، ووقت الـ UI thread والـ raster thread لكل frame، وعدد الـ
-  frames اللي فيها jank مقارنةً بالـ budget الحقيقي لشاشة الجهاز (60 أو 90 أو 120 Hz)، وp50/p90/p99
-  للـ session كلها، وأسوأ 5 frames وامتى حصلوا، و sparkline صغير لآخر 120 frame.
-- 🧠 **الرامات**: الـ RSS بتاع الـ process (دلوقتي وأعلى قيمة)، والـ image cache: بيستخدم كام
-  byte وكام صورة من الحد الأقصى، وكام صورة live على الشاشة.
-- 🖼 **الصور التقيلة**: أي صورة اتعملها decode بحجم أكبر بكتير من اللي ظاهرة بيه، والرامات
-  اللي بتضيع عليها، و `cacheWidth` المقترح اللي يحل المشكلة.
-- 🔁 **الـ Rebuilds**: لفّ أي widget بـ `HudRebuildTracker(label: ...)` وهتشوف اتبنى كام مرة،
-  وكام مرة في الثانية دلوقتي، وأعلى معدل.
-- 📋 **تقرير**: زرار Copy بينسخ تقرير Markdown (جداول جاهزة لـ issue أو PR)، و
-  `exportReport()` بيرجعلك نفس الداتا كـ object فيه `toJson()` و `toMarkdown()`.
-- 🪶 **خفيف**: الـ HUD نفسه جوه `RepaintBoundary`، وبيحدّث شاشته بالكتير مرتين ونص في الثانية
-  ولما يكون فيه جديد بس، ومش بيعمل `setState` على شجرة الـ app بتاعك أبدًا.
-- 🚫 **صفر تكلفة في الـ release**: لما `enabled` تبقى `false` (وده الـ default في الـ release)
-  الـ `PerfHud` بيرجّع الـ child زي ما هو: لا callbacks ولا timers ولا hooks.
-
-## 📦 التثبيت
-
-</div>
+## 📦 Installation
 
 ```yaml
 dependencies:
-  flutter_perf_hud:
-    git:
-      url: https://github.com/youssef336/flutter_perf_hud
-      ref: main
+  flutter_perf_hud: ^0.1.1
 ```
 
-<div dir="rtl">
-
-## 🚀 الاستخدام
-
-</div>
+## 🚀 Usage
 
 ```dart
 import 'package:flutter/foundation.dart';
@@ -98,18 +92,15 @@ final controller = PerfHudController(config: const PerfHudConfig(showOverlay: fa
 runApp(PerfHud(controller: controller, child: const MyApp()));
 ```
 
-<div dir="rtl">
+`PerfHud` does not need a `MaterialApp` above it: it is the one wrapping the app, and it gets its own
+`Directionality` and `MediaQuery` from the `View`. The pill can be dragged anywhere, and touches
+outside it go to the app as usual. Use `PerfHud.maybeOf(context)` anywhere the HUD might be turned off
+(as in release).
 
-`PerfHud` مش محتاج `MaterialApp` فوقه: هو اللي بيلف الـ app، وبيجيب الـ `Directionality` و
-`MediaQuery` بتوعه من الـ `View`. الحبّاية بتتسحب لأي مكان، واللمس برّاها بيروح للـ app عادي.
-استخدم `PerfHud.maybeOf(context)` في أي مكان ممكن يكون الـ HUD فيه مقفول (زي الـ release).
+Keep `enabled` constant for the lifetime of the app: if you flip it while it is running, the tree
+above the app changes and its state is reset.
 
-خلّي `enabled` ثابتة طول عمر الـ app: لو قلبتها وهو شغال، الشجرة اللي فوق الـ app بتتغير
-والـ state بتاعه بيتصفّر.
-
-## 🖥 شكل اللوحة
-
-</div>
+## 🖥 What the panel looks like
 
 ```text
  ● 58 fps · 1.3% jank · 182 MB            <- the pill: tap to open, drag to move
@@ -132,41 +123,37 @@ runApp(PerfHud(controller: controller, child: const MyApp()));
 ╰──────────────────────────────────────────╯
 ```
 
-<div dir="rtl">
+The dot in the pill: 🟢 fine, 🟡 close to the limit, 🔴 over the limit (computed from the jank in the
+last 120 frames). The same colors are used on every number inside the panel.
 
-النقطة اللي في الحبّاية: 🟢 تمام، 🟡 قربت من الحد، 🔴 عدّت الحد (بتتحسب من الـ jank في آخر
-120 frame). نفس الألوان على كل رقم جوه اللوحة.
-
-## 📖 تقرا كل رقم إزاي (وتعمل إيه)
+## 📖 How to read each number (and what to do)
 
 ### 🎞 Frames
 
-| الرقم | معناه | لو وحش تعمل إيه |
+| Number | What it means | What to do if it is bad |
 |---|---|---|
-| **Frame rate** | الـ frames في آخر ثانية رسم فعلي. «idle» يعني مفيش حاجة بتتغير فـ Flutter مش بيرسم، وده طبيعي | قيسه وإنت بتعمل scroll أو animation، مش والشاشة واقفة |
-| **Budget** | الوقت المسموح للـ frame الواحد = `1000 / refresh rate` (16.7ms على 60Hz، 8.3ms على 120Hz) | — |
-| **UI thread** | وقت الـ build والـ layout والـ paint بتوع Dart | `build` تقيل، شغل sync في الـ build (JSON، sort، format)، rebuild لشجرة كبيرة: استخدم `const`، و `ValueListenableBuilder`/`select` بدل `setState` فوق، و `compute()` أو isolate للشغل التقيل |
-| **Raster thread** | وقت تحويل الـ frame لـ pixels على الـ raster thread | `saveLayer` (Opacity، ShaderMask، clip بـ antiAlias)، ظلال وblur كتير، صور كبيرة: استخدم `RepaintBoundary` للحاجات الثابتة، وقلّل الـ clips والـ opacity layers |
-| **Jank** | frame فيها الـ UI **أو** الـ raster عدّى الـ budget (نفس تعريف DevTools) | لو أكتر من 5% في scroll عادي فيه مشكلة. افتح DevTools › Performance عند الوقت اللي في «Worst frames» |
-| **p90 / p99** | 90% / 99% من الـ frames أسرع من الرقم ده | p99 أعلى من الـ budget = تقطيع بيحسّه المستخدم حتى لو المتوسط كويس |
+| **Frame rate** | Frames in the last second of actual drawing. "idle" means nothing is changing, so Flutter is not drawing, and that is normal | Measure it while you scroll or run an animation, not while the screen is still |
+| **Budget** | The time allowed for one frame = `1000 / refresh rate` (16.7ms at 60Hz, 8.3ms at 120Hz) | — |
+| **UI thread** | Dart's build, layout and paint time | A heavy `build`, sync work in build (JSON, sort, format), rebuilding a large tree: use `const`, `ValueListenableBuilder`/`select` instead of a `setState` high up, and `compute()` or an isolate for heavy work |
+| **Raster thread** | The time to turn the frame into pixels on the raster thread | `saveLayer` (Opacity, ShaderMask, clip with antiAlias), many shadows and blurs, large images: use `RepaintBoundary` for static content, and reduce clips and opacity layers |
+| **Jank** | A frame where the UI **or** the raster time went over the budget (the same definition as DevTools) | More than 5% in a normal scroll means there is a problem. Open DevTools › Performance at the time shown in "Worst frames" |
+| **p90 / p99** | 90% / 99% of frames are faster than this number | A p99 above the budget = stutter the user feels even if the average is good |
 
 ### 🧠 Memory
 
-| الرقم | معناه | لو وحش تعمل إيه |
+| Number | What it means | What to do if it is bad |
 |---|---|---|
-| **RSS** | الرامات الحقيقية اللي الـ process ماسكها (Dart heap + engine + صور + native). الـ peak هو اللي الـ OS بيقفل الـ app بسببه | لو بيطلع وماينزلش وإنت رايح جاي بين الشاشات = غالبًا leak (شوف قسم leak_tracker تحت) |
-| **Image cache bytes** | الصور اللي اتعملها decode ومتخزنة. الحد الافتراضي 100MB | لو قرّب من الـ 100%، الصور بتتطرد وتتعمل decode تاني (تقطيع + CPU). صغّر الصور بـ `cacheWidth` قبل ما تكبّر الحد |
-| **Images / Live images** | عدد الصور في الـ cache، وكام واحدة مستخدمة دلوقتي | live كتير جدًا في list = الـ items مش بتتشال أو الـ cacheExtent كبير |
+| **RSS** | The real memory the process holds (Dart heap + engine + images + native). The peak is what the OS kills the app for | If it goes up and never comes down as you move back and forth between screens = most likely a leak (see the leak_tracker section below) |
+| **Image cache bytes** | Images that were decoded and are stored. The default limit is 100MB | If it gets close to 100%, images are evicted and decoded again (stutter + CPU). Shrink the images with `cacheWidth` before raising the limit |
+| **Images / Live images** | The number of images in the cache, and how many are in use right now | Very many live images in a list = the items are not being removed or the cacheExtent is large |
 
-### 🖼 Images (الصور التقيلة)
+### 🖼 Images (oversized images)
 
-بيستخدم نفس قاعدة `debugInvertOversizedImages` بتاعة Flutter: الصورة «تقيلة» لو الـ decode
-بتاعها بياخد رامات أكتر من حجم عرضها + 128KB. لكل صورة بيقولك:
+It uses the same rule as Flutter's `debugInvertOversizedImages`: an image is "oversized" if its decode
+takes more memory than its display size + 128KB. For each image it tells you:
 
-- الحجم اللي اتعملها decode بيه، والحجم اللي ظاهرة بيه (بالـ physical pixels)، والرامات الضايعة.
-- **`cacheWidth` المقترح** = عرض الصورة على الشاشة × الـ devicePixelRatio.
-
-</div>
+- The size it was decoded at, the size it is shown at (in physical pixels), and the wasted memory.
+- **The suggested `cacheWidth`** = the image's on-screen width × the devicePixelRatio.
 
 ```dart
 // Before: a 4000×3000 photo decoded at full size into a 120 px avatar (~64 MB)
@@ -177,47 +164,41 @@ Image.network(url, width: 120, cacheWidth: (120 * MediaQuery.devicePixelRatioOf(
 // Or for any ImageProvider: ResizeImage(provider, width: ...)
 ```
 
-<div dir="rtl">
-
-لو نفس الصورة ظاهرة مرة thumbnail ومرة full screen، الأكبر هو اللي بيتحسب، فمش هتاخد إنذار
-غلط. الخاصية دي شغالة في الـ **debug والـ profile** (Flutter مش بيبلّغ عن أحجام الصور في
-الـ release).
+If the same image is shown once as a thumbnail and once full screen, the larger one is what counts, so
+you will not get a false alarm. This feature works in **debug and profile** (Flutter does not report
+image sizes in release).
 
 ### 🔁 Rebuilds
 
-`HudRebuildTracker` بيعدّ كل مرة الـ parent بيبني الـ widget ده من جديد:
+`HudRebuildTracker` counts every time the parent builds this widget again:
 
-- **total**: كام مرة من أول الـ session. **now/s**: في آخر ثانية كاملة. **peak/s**: أعلى معدل.
-- widget بيتبني بمعدل الـ frame rate (60/s) وهو مش animation = حد فوقه بيعمل rebuild كل frame
-  (ticker، stream، `setState` في مكان عالي). انزل بالـ state لتحت، أو استخدم `select`، أو
-  `const`.
-- tracker معمول `const` مش بيتبني تاني لما الـ parent يتبني، فهيفضل عند 1: ده الطبيعي.
-- أكتر من tracker بنفس الـ label بيتجمعوا (مفيد لـ items الـ list).
+- **total**: how many times since the start of the session. **now/s**: in the last full second.
+  **peak/s**: the highest rate.
+- A widget that is built at the frame rate (60/s) while it is not an animation = something above it
+  rebuilds every frame (a ticker, a stream, a `setState` high up). Move the state down, or use
+  `select`, or `const`.
+- A tracker made `const` is not built again when the parent builds, so it will stay at 1: that is
+  normal.
+- Several trackers with the same label are added together (useful for list items).
 
-## ⏱ قيس في الـ profile، مش الـ debug
+## ⏱ Measure in profile, not debug
 
-الـ debug mode فيه JIT و asserts وأدوات debug، فالـ frames فيه **أبطأ بكتير** من الحقيقة.
-أرقام الـ jank الحقيقية من الـ profile على جهاز حقيقي:
-
-</div>
+Debug mode has JIT, asserts and debug tools, so frames in it are **much slower** than reality. Real
+jank numbers come from profile mode on a real device:
 
 ```bash
 flutter run --profile        # on a real device, not an emulator or simulator
 ```
 
-<div dir="rtl">
+`PerfHud` runs in profile on its own (the default is `!kReleaseMode`), and the report records the
+build mode; if it was debug, it adds a warning that the numbers are pessimistic. Debug is fine for
+rebuilds and oversized images, not for frame times.
 
-الـ `PerfHud` شغال في الـ profile لوحده (الـ default هو `!kReleaseMode`)، والتقرير بيكتب الـ
-build mode، ولو كان debug بيحط تحذير إن الأرقام متشائمة. الـ debug كويس للـ rebuilds والصور
-التقيلة، مش لأوقات الـ frames.
+## 🕳 Leaks with `leak_tracker`
 
-## 🕳 الـ Leaks مع `leak_tracker`
-
-الباكدج مش بيعتمد على `leak_tracker` عشان يفضل من غير dependencies، بس الاتنين بيكمّلوا بعض:
-الـ HUD بيوريك إن الـ RSS بيطلع وماينزلش، و `leak_tracker` بيقولك مين الـ object اللي ما اتعملوش
-dispose. أسهل طريقة إنك تشغّله في الـ widget tests:
-
-</div>
+The package does not depend on `leak_tracker` so that it stays dependency-free, but the two complement
+each other: the HUD shows you that the RSS goes up and never comes down, and `leak_tracker` tells you
+which object was not disposed. The easiest way is to run it in your widget tests:
 
 ```yaml
 dev_dependencies:
@@ -235,44 +216,43 @@ FutureOr<void> testExecutable(FutureOr<void> Function() testMain) {
 }
 ```
 
-<div dir="rtl">
+Inside the app itself, `leak_tracker` listens to `FlutterMemoryAllocations`, and you can print the
+leaks next to the HUD report. The `leak_tracker` API is still changing, so check its README for the
+version you have.
 
-جوه الـ app نفسه، `leak_tracker` بيسمع لـ `FlutterMemoryAllocations` وتقدر تطبع الـ leaks
-جنب تقرير الـ HUD. الـ API بتاع `leak_tracker` لسه بيتغير، فراجع الـ README بتاعه للنسخة اللي
-عندك.
+## ⚙️ Configuration (`PerfHudConfig`)
 
-## ⚙️ الإعدادات (`PerfHudConfig`)
-
-| الخاصية | الافتراضي | بتعمل إيه |
+| Property | Default | What it does |
 |---|---|---|
-| `targetFrameRate` | `null` | الـ budget؛ `null` = refresh rate الشاشة |
-| `frameWindow` | `120` | عدد الـ frames في الأرقام «recent» والـ sparkline |
-| `worstFramesCount` | `5` | عدد أسوأ الـ frames المحفوظة |
-| `uiRefreshInterval` | `400ms` | أقصى معدل لتحديث شاشة الـ HUD |
-| `memorySampleInterval` | `1s` | كل قد إيه بيقرا الرامات والـ image cache |
-| `memoryHistoryLength` | `60` | عدد قراءات الرامات في الـ sparkline |
-| `memoryWarningBytes` | `512MB` | الـ RSS اللي فوقه الرقم يبقى أحمر |
-| `jankWarningPercent` | `5` | نسبة الـ jank اللي فوقها اللون أحمر |
-| `trackOversizedImages` | `true` | تشغيل كشف الصور التقيلة |
-| `oversizedImageAllowanceBytes` | `128KB` | السماحية قبل ما الصورة تتحسب تقيلة |
-| `maxTrackedImages` | `50` | أقصى عدد صور تقيلة بيفتكرها |
-| `rebuildWarningPerSecond` | `30` | معدل الـ rebuild اللي فوقه اللون أحمر |
-| `reportTopCount` | `10` | عدد العناصر في كل قايمة في التقرير |
-| `showOverlay` | `true` | `false` = يجمع الداتا من غير ما يرسم حاجة |
-| `initiallyExpanded` | `false` | اللوحة تبدأ مفتوحة |
-| `initialOffset` | `(12, 96)` | مكان الحبّاية في الأول |
+| `targetFrameRate` | `null` | The budget; `null` = the display's refresh rate |
+| `frameWindow` | `120` | The number of frames in the "recent" numbers and the sparkline |
+| `worstFramesCount` | `5` | The number of worst frames kept |
+| `uiRefreshInterval` | `400ms` | The maximum rate at which the HUD screen updates |
+| `memorySampleInterval` | `1s` | How often it reads memory and the image cache |
+| `memoryHistoryLength` | `60` | The number of memory readings in the sparkline |
+| `memoryWarningBytes` | `512MB` | The RSS above which the number turns red |
+| `jankWarningPercent` | `5` | The jank percentage above which the color turns red |
+| `trackOversizedImages` | `true` | Turns oversized-image detection on |
+| `oversizedImageAllowanceBytes` | `128KB` | The allowance before an image counts as oversized |
+| `maxTrackedImages` | `50` | The maximum number of oversized images it remembers |
+| `rebuildWarningPerSecond` | `30` | The rebuild rate above which the color turns red |
+| `reportTopCount` | `10` | The number of entries in each list in the report |
+| `showOverlay` | `true` | `false` = collects the data without drawing anything |
+| `initiallyExpanded` | `false` | The panel starts open |
+| `initialOffset` | `(12, 96)` | The initial position of the pill |
 
-## ⚖️ الحدود
+## ⚖️ Limitations
 
-- الـ FPS بيتحسب من الـ frames اللي اترسمت فعلًا؛ وقت ما الشاشة واقفة هتشوف «idle» مش 0.
-- الـ RSS مش متاح على الـ web (الـ image cache متاح).
-- الـ RSS peak هو أعلى قيمة الـ OS شافها للـ process من أول ما اشتغل، مش من أول الـ session.
-- الـ `HudRebuildTracker` بيعدّ builds الـ widget نفسه، مش كل الـ widgets اللي تحته.
-- الـ p50/p90/p99 بتاعة الـ session محسوبة من histogram بدقة 0.1ms (عشان الذاكرة متكبرش مع
-  الوقت)؛ أي frame أبطأ من 100ms بيتحسب بقيمته الحقيقية في الـ max.
-- ده HUD للمراقبة وإنت شغال، مش بديل للـ DevTools: لما تلاقي frame وحشة، افتح الـ timeline.
-
-</div>
+- FPS is computed from frames that were actually drawn; while the screen is still you will see "idle",
+  not 0.
+- RSS is not available on the web (the image cache is).
+- The RSS peak is the highest value the OS saw for the process since it started, not since the start
+  of the session.
+- `HudRebuildTracker` counts the builds of the widget itself, not of all the widgets below it.
+- The session p50/p90/p99 are computed from a histogram with 0.1ms precision (so memory does not grow
+  over time); any frame slower than 100ms is counted at its real value in the max.
+- This is a HUD for watching while you work, not a replacement for DevTools: when you find a bad
+  frame, open the timeline.
 
 ## 🛠 Tech stack
 

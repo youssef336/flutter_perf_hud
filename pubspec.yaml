@@ -1,9 +1,8 @@
 name: flutter_perf_hud
 description: >-
-  A drop-in in-app performance HUD for Flutter apps: frame rate and jank,
-  UI/raster thread times, process memory, image cache, oversized images and
-  rebuild counters, with a one-tap Markdown report.
-version: 0.1.0
+  In-app performance HUD for Flutter: FPS, jank, UI/raster thread times, memory,
+  oversized images and rebuild counts, with a one-tap Markdown report.
+version: 0.1.1
 homepage: https://github.com/youssef336/flutter_perf_hud
 repository: https://github.com/youssef336/flutter_perf_hud
 issue_tracker: https://github.com/youssef336/flutter_perf_hud/issues
