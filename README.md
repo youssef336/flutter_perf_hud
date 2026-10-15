@@ -1,5 +1,7 @@
 [العربية](README.ar.md)
 
+<p align="center"><img src="https://raw.githubusercontent.com/youssef336/flutter_perf_hud/main/screenshots/banner.png" alt="flutter_perf_hud banner" width="100%"></p>
+
 <h1 align="center">Flutter Perf HUD</h1>
 
 <p align="center">
